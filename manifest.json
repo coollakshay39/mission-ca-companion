@@ -1,0 +1,30 @@
+{
+  "name": "Mission CA Companion",
+  "short_name": "Mission CA",
+  "description": "Small progress every day. Big results in November.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#faf7ff",
+  "theme_color": "#7047dc",
+  "lang": "en-IN",
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
