@@ -50,6 +50,7 @@ body{ min-width:320px; background:radial-gradient(circle at 14% 14%,var(--theme-
 .planner-close{ position:absolute; top:15px; right:17px; width:32px; height:32px; border-radius:50%; color:#6b607d; font-size:1.7rem; line-height:1; }
 .planner-close:hover{ background:#f0ebfa; }
 .planner-add-row{ display:grid; grid-template-columns:1fr 138px auto; gap:10px; }
+.todo-add-row{ grid-template-columns:1fr auto; }
 .planner-add-row .primary-btn{ min-height:48px; padding:0 21px; }
 .planner-select{ border:1px solid #e7dff4; border-radius:14px; background:#fff; color:var(--text); padding:0 10px; }
 .todo-list,.hours-list{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
