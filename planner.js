@@ -61,6 +61,7 @@ function renderTodo(todo){
 function openHoursPlanner(){
     const backdrop=createPlannerBackdrop("hours-planner");
     backdrop.dataset.weekOffset="0";
+    backdrop.dataset.selectedDate=getDateKey();
     document.body.appendChild(backdrop);
     renderHoursPlanner(backdrop);
 }
@@ -70,6 +71,8 @@ function renderHoursPlanner(backdrop){
     const range=getWeekRange(offset);
     const entries=getStudyHoursForWeek(offset);
     const isCurrentWeek=offset===0;
+    const selectedDate=getHoursPlannerSelectedDate(backdrop,range,isCurrentWeek);
+    const selectedHours=getStudyHoursForDate(selectedDate);
 
     backdrop.innerHTML=`
         <section class="planner-dialog" role="dialog" aria-modal="true" aria-labelledby="hoursPlannerTitle">
@@ -82,31 +85,65 @@ function renderHoursPlanner(backdrop){
                 <span>${formatWeekRange(range)}</span>
                 <button id="nextWeekBtn" class="secondary-btn" type="button" ${isCurrentWeek?"disabled":""}>Next →</button>
             </div>
-            ${isCurrentWeek?`<div class="planner-add-row hours-add-row"><input id="hoursInput" class="text-input" type="number" min="0.25" step="0.25" placeholder="Hours studied today"><button id="addHoursBtn" class="primary-btn" type="button">Add hours</button></div>`:""}
+            <p class="hours-editor-note">Choose any day in this week. Saving replaces that day’s total; use 0 to clear it.</p>
+            <div class="planner-add-row hours-add-row">
+                <input id="hoursDate" class="text-input" type="date" value="${selectedDate}" max="${getDateKey()}">
+                <input id="hoursInput" class="text-input" type="number" min="0" step="0.25" value="${selectedHours||""}" placeholder="Hours studied">
+                <button id="saveHoursBtn" class="primary-btn" type="button">Save hours</button>
+            </div>
             <div class="hours-list">
-                ${entries.length?entries.map(entry=>`<article class="hours-item"><span>${formatEntryDate(entry.date)}</span><strong>${entry.hours} h</strong></article>`).join(""):`<p class="planner-empty">${isCurrentWeek?"No study hours logged this week yet.":"No study hours were logged this week."}</p>`}
+                ${entries.length?entries.map(entry=>`<article class="hours-item"><span>${formatEntryDate(entry.date)}</span><strong>${entry.hours} h</strong><button class="hours-edit secondary-btn" data-date="${entry.date}" type="button">Edit</button></article>`).join(""):`<p class="planner-empty">${isCurrentWeek?"No study hours logged this week yet.":"No study hours were logged this week."}</p>`}
             </div>
         </section>
     `;
 
     bindPlannerClose(backdrop);
-    backdrop.querySelector("#previousWeekBtn").onclick=()=>{ backdrop.dataset.weekOffset=String(offset-1); renderHoursPlanner(backdrop); };
+    backdrop.querySelector("#previousWeekBtn").onclick=()=>{
+        backdrop.dataset.weekOffset=String(offset-1);
+        backdrop.dataset.selectedDate=getWeekRange(offset-1).end;
+        renderHoursPlanner(backdrop);
+    };
     const next=backdrop.querySelector("#nextWeekBtn");
-    if(next&&!isCurrentWeek) next.onclick=()=>{ backdrop.dataset.weekOffset=String(offset+1); renderHoursPlanner(backdrop); };
+    if(next&&!isCurrentWeek) next.onclick=()=>{
+        const nextOffset=offset+1;
+        backdrop.dataset.weekOffset=String(nextOffset);
+        backdrop.dataset.selectedDate=nextOffset===0?getDateKey():getWeekRange(nextOffset).end;
+        renderHoursPlanner(backdrop);
+    };
 
-    const addButton=backdrop.querySelector("#addHoursBtn");
-    if(addButton){
-        const input=backdrop.querySelector("#hoursInput");
-        const add=()=>{
-            if(!addStudyHours(input.value)){ input.focus(); return; }
+    const dateInput=backdrop.querySelector("#hoursDate");
+    const hoursInput=backdrop.querySelector("#hoursInput");
+    dateInput.onchange=()=>{
+        backdrop.dataset.selectedDate=dateInput.value;
+        renderHoursPlanner(backdrop);
+    };
+
+    const saveButton=backdrop.querySelector("#saveHoursBtn");
+    if(saveButton){
+        const save=()=>{
+            if(!setStudyHours(hoursInput.value,dateInput.value)){ hoursInput.focus(); return; }
             renderHoursPlanner(backdrop);
             renderWelcomeScreen();
         };
-        addButton.onclick=add;
-        input.onkeydown=event=>{ if(event.key==="Enter") add(); };
-        requestAnimationFrame(()=>input.focus());
+        saveButton.onclick=save;
+        hoursInput.onkeydown=event=>{ if(event.key==="Enter") save(); };
     }
+    backdrop.querySelectorAll(".hours-edit").forEach(button=>{
+        button.onclick=()=>{
+            backdrop.dataset.selectedDate=button.dataset.date;
+            renderHoursPlanner(backdrop);
+        };
+    });
     requestAnimationFrame(()=>backdrop.classList.add("is-open"));
+}
+
+function getHoursPlannerSelectedDate(backdrop,range,isCurrentWeek){
+    const selected=backdrop.dataset.selectedDate;
+    const latest=isCurrentWeek?getDateKey():range.end;
+    if(selected&&selected>=range.start&&selected<=latest) return selected;
+    const fallback=isCurrentWeek?getDateKey():range.end;
+    backdrop.dataset.selectedDate=fallback;
+    return fallback;
 }
 
 function createPlannerBackdrop(type){

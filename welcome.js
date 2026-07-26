@@ -1,6 +1,7 @@
 // Home screen — Mission CA Companion
 
 let welcomeQuoteTimer = null;
+let welcomeCountdownTimer = null;
 
 function renderWelcomeScreen(){
     const app = document.getElementById("app");
@@ -31,6 +32,7 @@ function renderWelcomeScreen(){
 
     attachWelcomeEvents();
     startWelcomeQuoteRotation();
+    startWelcomeCountdown();
 }
 
 function renderHomeUtilities(){
@@ -48,7 +50,45 @@ function renderHomeUtilities(){
                 <b aria-hidden="true">→</b>
             </button>
         </section>
+        ${renderExamCountdown()}
     `;
+}
+
+function getExamCountdown(){
+    const start=new Date(2026,0,1,0,0,0,0);
+    const deadline=new Date(2026,9,28,0,0,0,0);
+    const now=new Date();
+    const remainingHours=Math.max(0,Math.ceil((deadline-now)/3600000));
+    const total=deadline-start;
+    const remaining=Math.max(0,Math.min(100,((deadline-now)/total)*100));
+    return {remainingHours,remaining};
+}
+
+function renderExamCountdown(){
+    const countdown=getExamCountdown();
+    return `
+        <section class="exam-countdown glass-card" aria-live="polite">
+            <div>
+                <p class="eyebrow">CA FINAL COUNTDOWN</p>
+                <h2 id="examCountdownHours">${countdown.remainingHours.toLocaleString()} hours remaining</h2>
+                <p>Until 27 October 2026</p>
+            </div>
+            <div class="countdown-track" aria-label="${countdown.remainingHours} hours remaining until 27 October 2026"><span id="examCountdownFill" style="width:${countdown.remaining}%"></span></div>
+        </section>
+    `;
+}
+
+function startWelcomeCountdown(){
+    clearInterval(welcomeCountdownTimer);
+    const refresh=()=>{
+        const countdown=getExamCountdown();
+        const hours=document.getElementById("examCountdownHours");
+        const fill=document.getElementById("examCountdownFill");
+        if(hours) hours.textContent=`${countdown.remainingHours.toLocaleString()} hours remaining`;
+        if(fill) fill.style.width=`${countdown.remaining}%`;
+    };
+    refresh();
+    welcomeCountdownTimer=setInterval(refresh,60000);
 }
 
 /* A weekly completion measure based on chapters checked off in the last 7 days. */

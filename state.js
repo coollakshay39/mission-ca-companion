@@ -920,6 +920,27 @@ function addStudyHours(hours,dateKey=getDateKey()){
     return true;
 }
 
+function setStudyHours(hours,dateKey=getDateKey()){
+    const amount=Math.round(number(hours)*100)/100;
+    if(amount<0||!dateKey) return false;
+
+    const entryIndex=state.studyHours.findIndex(item=>item.date===dateKey);
+    if(amount===0){
+        if(entryIndex!==-1) state.studyHours.splice(entryIndex,1);
+    }else if(entryIndex!==-1){
+        state.studyHours[entryIndex].hours=amount;
+    }else{
+        state.studyHours.push({id:uuid(),date:dateKey,hours:amount});
+    }
+
+    saveState();
+    return true;
+}
+
+function getStudyHoursForDate(dateKey=getDateKey()){
+    return state.studyHours.find(item=>item.date===dateKey)?.hours||0;
+}
+
 function getStudyHoursForWeek(offset=0){
     const range=getWeekRange(offset);
     return state.studyHours
