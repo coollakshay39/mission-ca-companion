@@ -16,12 +16,8 @@ function renderTodoPlanner(backdrop){
             <p class="eyebrow">YOUR NOTEPAD</p>
             <h2 id="todoPlannerTitle">Next steps</h2>
             <p class="planner-subtitle">Keep the small things out of your head and in one calm place.</p>
-            <div class="planner-add-row">
+            <div class="planner-add-row todo-add-row">
                 <input id="todoInput" class="text-input" placeholder="Add something to do…" autocomplete="off">
-                <select id="todoTimeframe" class="planner-select" aria-label="When is this task for">
-                    <option value="next-day">Next day</option>
-                    <option value="next-week" selected>Next week</option>
-                </select>
                 <button id="addTodoBtn" class="primary-btn" type="button">Add</button>
             </div>
             <div class="todo-list">
@@ -34,7 +30,7 @@ function renderTodoPlanner(backdrop){
     bindPlannerClose(backdrop);
     const input=backdrop.querySelector("#todoInput");
     const add=()=>{
-        const todo=addTodo(input.value,backdrop.querySelector("#todoTimeframe").value);
+        const todo=addTodo(input.value);
         if(!todo){ input.focus(); return; }
         renderTodoPlanner(backdrop);
     };
@@ -50,10 +46,9 @@ function renderTodoPlanner(backdrop){
 }
 
 function renderTodo(todo){
-    const timeframe=todo.timeframe==="next-day"?"Next day":"Next week";
     return `<article class="todo-item ${todo.completed?"is-complete":""}">
         <button class="todo-toggle" data-id="${todo.id}" type="button" aria-label="Mark ${escapeHtml(todo.title)} ${todo.completed?"incomplete":"complete"}">${todo.completed?"✓":""}</button>
-        <div><strong>${escapeHtml(todo.title)}</strong><span>${timeframe}</span></div>
+        <div><strong>${escapeHtml(todo.title)}</strong></div>
         <button class="todo-delete" data-id="${todo.id}" type="button" aria-label="Delete ${escapeHtml(todo.title)}">×</button>
     </article>`;
 }
