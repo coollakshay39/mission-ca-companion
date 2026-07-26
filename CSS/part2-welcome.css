@@ -91,6 +91,12 @@
 .home-tool-card small{ color:#776f85; font-size:.83rem; }
 .home-tool-card b{ margin-left:auto; color:var(--primary); font-size:1.2rem; }
 .home-tool-icon{ display:grid; width:42px; height:42px; place-items:center; border-radius:14px; color:var(--primary); background:color-mix(in srgb,var(--primary) 12%,white); font-size:1.35rem; font-weight:800; }
+.exam-countdown{ display:flex; align-items:center; gap:28px; margin-top:18px; padding:20px 24px; border:1px solid rgba(255,255,255,.9); border-radius:22px; background:rgba(255,255,255,.56); box-shadow:0 10px 25px rgba(76,54,129,.07); }
+.exam-countdown .eyebrow{ margin-bottom:4px; }
+.exam-countdown h2{ color:#2b2440; font-size:1.3rem; letter-spacing:-.035em; }
+.exam-countdown p:last-child{ margin-top:3px; color:#776f85; font-size:.85rem; }
+.countdown-track{ flex:1; height:12px; overflow:hidden; border-radius:99px; background:#ebe5f4; }
+.countdown-track span{ display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--primary),#b98ef2); box-shadow:0 3px 10px rgba(112,75,222,.22); transition:width .5s ease; }
 
 .motivation-section{ margin-top:24px; padding:22px 42px 28px; border:1px solid rgba(255,255,255,.88); border-radius:30px; background:rgba(255,255,255,.48); box-shadow:0 14px 36px rgba(92,65,151,.07); }
 .motivation-heading{ margin:0 0 18px; color:var(--primary); text-align:center; font-size:1.25rem; letter-spacing:-.035em; }
@@ -103,6 +109,6 @@
 .welcome-ticker span{ color:#7650da; }
 .welcome-ticker.is-changing{ opacity:0; transform:translateY(4px); }
 
-@media (max-width:680px){ .home-utilities{ grid-template-columns:1fr; gap:12px; } }
+@media (max-width:680px){ .home-utilities{ grid-template-columns:1fr; gap:12px; } .exam-countdown{ align-items:flex-start; flex-direction:column; gap:13px; } .countdown-track{ width:100%; } }
 
 @keyframes welcome-enter{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
