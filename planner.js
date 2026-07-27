@@ -57,6 +57,7 @@ function openHoursPlanner(){
     const backdrop=createPlannerBackdrop("hours-planner");
     backdrop.dataset.weekOffset="0";
     backdrop.dataset.selectedDate=getDateKey();
+    backdrop.dataset.calendarMonth=getDateKey().slice(0,7);
     document.body.appendChild(backdrop);
     renderHoursPlanner(backdrop);
 }
@@ -86,6 +87,7 @@ function renderHoursPlanner(backdrop){
                 <input id="hoursInput" class="text-input" type="number" min="0" step="0.25" value="${selectedHours||""}" placeholder="Hours studied">
                 <button id="saveHoursBtn" class="primary-btn" type="button">Save hours</button>
             </div>
+            ${renderHoursCalendar(backdrop.dataset.calendarMonth,selectedDate)}
             <div class="hours-list">
                 ${entries.length?entries.map(entry=>`<article class="hours-item"><span>${formatEntryDate(entry.date)}</span><strong>${entry.hours} h</strong><button class="hours-edit secondary-btn" data-date="${entry.date}" type="button">Edit</button></article>`).join(""):`<p class="planner-empty">${isCurrentWeek?"No study hours logged this week yet.":"No study hours were logged this week."}</p>`}
             </div>
@@ -129,7 +131,60 @@ function renderHoursPlanner(backdrop){
             renderHoursPlanner(backdrop);
         };
     });
+    backdrop.querySelector("#calendarPreviousBtn").onclick=()=>{
+        backdrop.dataset.calendarMonth=shiftCalendarMonth(backdrop.dataset.calendarMonth,-1);
+        renderHoursPlanner(backdrop);
+    };
+    const calendarNext=backdrop.querySelector("#calendarNextBtn");
+    if(calendarNext) calendarNext.onclick=()=>{
+        backdrop.dataset.calendarMonth=shiftCalendarMonth(backdrop.dataset.calendarMonth,1);
+        renderHoursPlanner(backdrop);
+    };
+    backdrop.querySelectorAll(".hours-calendar-day:not(:disabled)").forEach(button=>{
+        button.onclick=()=>{
+            backdrop.dataset.selectedDate=button.dataset.date;
+            renderHoursPlanner(backdrop);
+        };
+    });
     requestAnimationFrame(()=>backdrop.classList.add("is-open"));
+}
+
+function renderHoursCalendar(monthKey,selectedDate){
+    const [year,month]=monthKey.split("-").map(Number);
+    const firstDay=new Date(year,month-1,1);
+    const daysInMonth=new Date(year,month,0).getDate();
+    const startOffset=(firstDay.getDay()+6)%7;
+    const today=getDateKey();
+    const cells=[];
+    for(let index=0;index<startOffset;index++) cells.push('<span class="hours-calendar-blank"></span>');
+    for(let day=1;day<=daysInMonth;day++){
+        const dateKey=`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+        const hours=getStudyHoursForDate(dateKey);
+        const future=dateKey>today;
+        const status=hours>0?getHoursColorClass(hours):"";
+        cells.push(`<button class="hours-calendar-day ${status} ${dateKey===selectedDate?"is-selected":""}" data-date="${dateKey}" type="button" ${future?"disabled":""} aria-label="${formatEntryDate(dateKey)}${hours?`, ${hours} hours`:""}"><span>${day}</span>${hours?`<b>${hours}h</b>`:""}</button>`);
+    }
+    const monthLabel=firstDay.toLocaleDateString("en-IN",{month:"long",year:"numeric"});
+    const canMoveForward=shiftCalendarMonth(monthKey,1)<=today.slice(0,7);
+    return `<section class="hours-calendar" aria-label="Study hours calendar">
+        <div class="hours-calendar-header"><button id="calendarPreviousBtn" class="secondary-btn" type="button" aria-label="Previous month">←</button><h3>${monthLabel}</h3><button id="calendarNextBtn" class="secondary-btn" type="button" aria-label="Next month" ${canMoveForward?"":"disabled"}>→</button></div>
+        <div class="hours-calendar-weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        <div class="hours-calendar-grid">${cells.join("")}</div>
+        <p class="hours-calendar-key"><i class="under-five"></i> Under 5h <i class="five-plus"></i> 5h+ (darker = more hours)</p>
+    </section>`;
+}
+
+function shiftCalendarMonth(monthKey,amount){
+    const [year,month]=monthKey.split("-").map(Number);
+    const date=new Date(year,month-1+amount,1);
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;
+}
+
+function getHoursColorClass(hours){
+    if(hours<5) return "hours-under-five";
+    if(hours<7) return "hours-pink-light";
+    if(hours<9) return "hours-pink-medium";
+    return "hours-pink-deep";
 }
 
 function getHoursPlannerSelectedDate(backdrop,range,isCurrentWeek){

@@ -282,7 +282,7 @@ function applyDynamicBackground(){
             ["#f2efff","#bfb5ef","#d1c7ff","#6651b3"], ["#f5f0ff","#d5bde9","#c7d3ff","#7855b1"], ["#f0f4ff","#b8c9ef","#c5d9ff","#4e70ae"], ["#f6f0f7","#dcbfe1","#c9c1eb","#8c5f91"], ["#f1f4f9","#becbe0","#c7d4e8","#547491"]
         ]
     };
-    const period=hour>=6&&hour<12?"morning":hour<17?"afternoon":hour<20?"evening":"night";
+    const period=hour>=6&&hour<12?"morning":hour<17?"afternoon":hour<21?"evening":"night";
     const [background,washOne,washTwo,primary]=themes[period][Math.floor(Math.random()*5)];
     const root=document.documentElement.style;
     root.setProperty("--theme-bg",background);
