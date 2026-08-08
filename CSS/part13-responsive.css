@@ -50,17 +50,22 @@ body{ min-width:320px; background:radial-gradient(circle at 14% 14%,var(--theme-
 .planner-close{ position:absolute; top:15px; right:17px; width:32px; height:32px; border-radius:50%; color:#6b607d; font-size:1.7rem; line-height:1; }
 .planner-close:hover{ background:#f0ebfa; }
 .planner-add-row{ display:grid; grid-template-columns:1fr 138px auto; gap:10px; }
-.todo-add-row{ grid-template-columns:1fr auto; }
+.todo-add-row{ grid-template-columns:1fr 150px auto; }
 .planner-add-row .primary-btn{ min-height:48px; padding:0 21px; }
 .planner-select{ border:1px solid #e7dff4; border-radius:14px; background:#fff; color:var(--text); padding:0 10px; }
 .todo-list,.hours-list{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
 .todo-item,.hours-item{ display:flex; align-items:center; gap:13px; padding:13px 15px; border-radius:15px; background:#f7f3fd; }
 .todo-toggle{ width:23px; height:23px; flex:0 0 auto; border:2px solid #b29ade; border-radius:8px; color:#fff; background:#fff; font-size:.8rem; font-weight:800; }
 .todo-item.is-complete .todo-toggle{ border-color:var(--primary); background:var(--primary); }
-.todo-item div{ display:flex; flex:1; flex-direction:column; }
+.todo-item .todo-content{ display:flex; flex:1; flex-direction:column; gap:9px; }
 .todo-item strong{ color:var(--text); font-size:.95rem; }
 .todo-item span{ color:#817891; font-size:.75rem; }
 .todo-item.is-complete strong{ color:#9188a2; text-decoration:line-through; }
+.todo-hours{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+.todo-hours label{ display:flex; align-items:center; gap:5px; color:#817891; font-size:.7rem; font-weight:750; }
+.todo-hours input{ width:64px; min-height:30px; padding:4px 7px; border:1px solid #e3daf0; border-radius:8px; color:#514863; background:#fff; font:inherit; }
+.todo-comparison{ padding:5px 8px; border-radius:99px; font-size:.7rem; font-weight:800; }
+.todo-comparison.is-saved{ color:#2d7961; background:#ddf6eb; }.todo-comparison.is-over{ color:#aa3f58; background:#ffe3e9; }
 .todo-delete{ width:28px; height:28px; border-radius:50%; color:#9a7491; font-size:1.3rem; }
 .todo-delete:hover{ background:#f0e3ec; color:#b3456d; }
 .planner-empty{ padding:19px; color:#80768e; text-align:center; }
@@ -119,6 +124,8 @@ body{ min-width:320px; background:radial-gradient(circle at 14% 14%,var(--theme-
     .edit-dialog-actions button{ width:100%; }
     .planner-dialog{ padding:31px 21px 23px; }
     .planner-add-row{ grid-template-columns:1fr auto; }
+    .todo-add-row{ grid-template-columns:1fr auto; }
+    .todo-add-row #todoEstimatedHours{ grid-column:1 / -1; }
     .planner-add-row .planner-select{ grid-column:1 / -1; min-height:44px; }
     .hours-add-row{ grid-template-columns:1fr; }
     .hours-calendar{ padding:12px; }
