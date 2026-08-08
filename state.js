@@ -861,14 +861,15 @@ function getSubjectProgress(){
 // Home planner — persisted with the mission data
 // ==========================================
 
-function addTodo(title,timeframe="next-week"){
+function addTodo(title,estimatedHours=""){
     const task=text(title);
     if(!task) return null;
 
     const todo={
         id:uuid(),
         title:task,
-        timeframe,
+        estimatedHours:number(estimatedHours)>0?Math.round(number(estimatedHours)*100)/100:null,
+        actualHours:null,
         completed:false,
         createdOn:Date.now()
     };
@@ -876,6 +877,17 @@ function addTodo(title,timeframe="next-week"){
     state.todos.push(todo);
     saveState();
     return todo;
+}
+
+function updateTodoHours(todoId,field,hours){
+    const todo=state.todos.find(item=>item.id===todoId);
+    if(!todo||!["estimatedHours","actualHours"].includes(field)) return false;
+    const raw=String(hours??"").trim();
+    const amount=number(raw);
+    if(raw!==""&&amount<0) return false;
+    todo[field]=raw===""?null:Math.round(amount*100)/100;
+    saveState();
+    return true;
 }
 
 function toggleTodo(todoId){

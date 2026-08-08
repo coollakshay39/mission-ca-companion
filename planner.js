@@ -18,6 +18,7 @@ function renderTodoPlanner(backdrop){
             <p class="planner-subtitle">Keep the small things out of your head and in one calm place.</p>
             <div class="planner-add-row todo-add-row">
                 <input id="todoInput" class="text-input" placeholder="Add something to do…" autocomplete="off">
+                <input id="todoEstimatedHours" class="text-input" type="number" min="0" step="0.25" placeholder="Est. hours" aria-label="Estimated hours">
                 <button id="addTodoBtn" class="primary-btn" type="button">Add</button>
             </div>
             <div class="todo-list">
@@ -29,8 +30,9 @@ function renderTodoPlanner(backdrop){
 
     bindPlannerClose(backdrop);
     const input=backdrop.querySelector("#todoInput");
+    const estimatedInput=backdrop.querySelector("#todoEstimatedHours");
     const add=()=>{
-        const todo=addTodo(input.value);
+        const todo=addTodo(input.value,estimatedInput.value);
         if(!todo){ input.focus(); return; }
         renderTodoPlanner(backdrop);
     };
@@ -42,13 +44,29 @@ function renderTodoPlanner(backdrop){
     backdrop.querySelectorAll(".todo-delete").forEach(button=>{
         button.onclick=()=>{ deleteTodo(button.dataset.id); renderTodoPlanner(backdrop); renderWelcomeScreen(); };
     });
+    backdrop.querySelectorAll(".todo-hours-input").forEach(input=>{
+        input.onchange=()=>{
+            updateTodoHours(input.dataset.id,input.dataset.field,input.value);
+            renderTodoPlanner(backdrop);
+        };
+    });
     requestAnimationFrame(()=>{ backdrop.classList.add("is-open"); input.focus(); });
 }
 
 function renderTodo(todo){
+    const estimated=number(todo.estimatedHours);
+    const actual=todo.actualHours===null||todo.actualHours===undefined?null:number(todo.actualHours);
+    const difference=actual===null||!estimated?"":actual-estimated;
+    const comparison=difference===""?"":difference===0?"On estimate":difference<0?`${Math.abs(difference)}h saved`:`${difference}h over`;
     return `<article class="todo-item ${todo.completed?"is-complete":""}">
         <button class="todo-toggle" data-id="${todo.id}" type="button" aria-label="Mark ${escapeHtml(todo.title)} ${todo.completed?"incomplete":"complete"}">${todo.completed?"✓":""}</button>
-        <div><strong>${escapeHtml(todo.title)}</strong></div>
+        <div class="todo-content"><strong>${escapeHtml(todo.title)}</strong>
+            <div class="todo-hours">
+                <label>Est.<input class="todo-hours-input" data-id="${todo.id}" data-field="estimatedHours" type="number" min="0" step="0.25" value="${estimated||""}" placeholder="hrs"></label>
+                <label>Actual<input class="todo-hours-input" data-id="${todo.id}" data-field="actualHours" type="number" min="0" step="0.25" value="${actual===null?"":actual}" placeholder="hrs"></label>
+                ${comparison?`<span class="todo-comparison ${difference>0?"is-over":"is-saved"}">${comparison}</span>`:""}
+            </div>
+        </div>
         <button class="todo-delete" data-id="${todo.id}" type="button" aria-label="Delete ${escapeHtml(todo.title)}">×</button>
     </article>`;
 }
