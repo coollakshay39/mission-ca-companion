@@ -40,7 +40,7 @@ function renderRewardCard(){
     const reward=state.reward||"";
     return `
         <section class="reward-card glass-card" aria-label="Reward">
-            <div class="reward-display"><p class="eyebrow">REWARD</p><h2>${reward?`🎁 ${escapeHtml(reward)}`:"Your next little celebration"}</h2><p>${reward?"Make the work worth it.":"Add something lovely to look forward to."}</p></div>
+            <div class="reward-display"><p class="reward-title">Reward — Your next little celebration</p>${reward?`<h2 class="reward-message">🧁 ${escapeHtml(reward)} 🧁</h2>`:`<p class="reward-empty">Add something lovely to look forward to.</p>`}</div>
             <div class="reward-form"><input id="rewardInput" class="text-input" value="${escapeHtml(reward)}" placeholder="e.g. Order a cheesecake" autocomplete="off"><button id="saveRewardBtn" class="primary-btn" type="button">Save reward</button></div>
         </section>`;
 }
