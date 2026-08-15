@@ -72,6 +72,8 @@ function loadState(){
 
         state.studyHours=saved.studyHours??[];
 
+        state.reward=saved.reward??"";
+
         if("settings" in state){
 
             state.settings=saved.settings??
@@ -199,6 +201,8 @@ function importData(json){
         state.todos=imported.todos??[];
 
         state.studyHours=imported.studyHours??[];
+
+        state.reward=imported.reward??"";
 
         if("settings" in state){
 

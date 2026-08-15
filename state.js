@@ -15,6 +15,7 @@ const state={
     missions:[],
     todos:[],
     studyHours:[],
+    reward:"",
     settings:{
 
     darkMode:false,
@@ -906,6 +907,11 @@ function getOpenTodoCount(){
     return state.todos.filter(item=>!item.completed).length;
 }
 
+function setReward(value){
+    state.reward=text(value);
+    saveState();
+}
+
 function getDateKey(date=new Date()){
     const local=new Date(date);
     return `${local.getFullYear()}-${String(local.getMonth()+1).padStart(2,"0")}-${String(local.getDate()).padStart(2,"0")}`;
@@ -914,7 +920,7 @@ function getDateKey(date=new Date()){
 function getWeekRange(offset=0){
     const date=new Date();
     date.setHours(12,0,0,0);
-    date.setDate(date.getDate()-((date.getDay()+6)%7)+(offset*7));
+    date.setDate(date.getDate()-date.getDay()+(offset*7));
     const start=getDateKey(date);
     date.setDate(date.getDate()+6);
     return {start,end:getDateKey(date)};
@@ -962,4 +968,10 @@ function getStudyHoursForWeek(offset=0){
 
 function getWeekStudyHours(offset=0){
     return Math.round(getStudyHoursForWeek(offset).reduce((sum,item)=>sum+number(item.hours),0)*100)/100;
+}
+
+function getWeekStudyAverage(offset=0){
+    const entries=getStudyHoursForWeek(offset);
+    if(!entries.length) return 0;
+    return Math.round((getWeekStudyHours(offset)/entries.length)*100)/100;
 }

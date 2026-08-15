@@ -93,7 +93,7 @@ function renderHoursPlanner(backdrop){
             <button class="planner-close" type="button" aria-label="Close">×</button>
             <p class="eyebrow">STUDY JOURNAL</p>
             <h2 id="hoursPlannerTitle">Study hours</h2>
-            <div class="hours-total"><strong>${getWeekStudyHours(offset)}</strong><span>hours this week</span></div>
+            <div class="hours-total"><div><strong>${getWeekStudyHours(offset)}</strong><span>hours this week</span></div><div><strong>${getWeekStudyAverage(offset)}</strong><span>average / logged day</span></div></div>
             <div class="week-nav">
                 <button id="previousWeekBtn" class="secondary-btn" type="button">← Previous</button>
                 <span>${formatWeekRange(range)}</span>
@@ -171,7 +171,7 @@ function renderHoursCalendar(monthKey,selectedDate){
     const [year,month]=monthKey.split("-").map(Number);
     const firstDay=new Date(year,month-1,1);
     const daysInMonth=new Date(year,month,0).getDate();
-    const startOffset=(firstDay.getDay()+6)%7;
+    const startOffset=firstDay.getDay();
     const today=getDateKey();
     const cells=[];
     for(let index=0;index<startOffset;index++) cells.push('<span class="hours-calendar-blank"></span>');
@@ -179,16 +179,16 @@ function renderHoursCalendar(monthKey,selectedDate){
         const dateKey=`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
         const hours=getStudyHoursForDate(dateKey);
         const future=dateKey>today;
-        const status=hours>0?getHoursColorClass(hours):"";
+        const status=getHoursColorClass(hours);
         cells.push(`<button class="hours-calendar-day ${status} ${dateKey===selectedDate?"is-selected":""}" data-date="${dateKey}" type="button" ${future?"disabled":""} aria-label="${formatEntryDate(dateKey)}${hours?`, ${hours} hours`:""}"><span>${day}</span>${hours?`<b>${hours}h</b>`:""}</button>`);
     }
     const monthLabel=firstDay.toLocaleDateString("en-IN",{month:"long",year:"numeric"});
     const canMoveForward=shiftCalendarMonth(monthKey,1)<=today.slice(0,7);
     return `<section class="hours-calendar" aria-label="Study hours calendar">
         <div class="hours-calendar-header"><button id="calendarPreviousBtn" class="secondary-btn" type="button" aria-label="Previous month">←</button><h3>${monthLabel}</h3><button id="calendarNextBtn" class="secondary-btn" type="button" aria-label="Next month" ${canMoveForward?"":"disabled"}>→</button></div>
-        <div class="hours-calendar-weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        <div class="hours-calendar-weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
         <div class="hours-calendar-grid">${cells.join("")}</div>
-        <p class="hours-calendar-key"><i class="under-five"></i> Under 5h <i class="five-plus"></i> 5h+ (darker = more hours)</p>
+        <p class="hours-calendar-key"><i class="hours-0-4"></i> 0–4 <i class="hours-4-6"></i> 4–6 <i class="hours-6-8"></i> 6–8 <i class="hours-8-10"></i> 8–10 <i class="hours-10-12"></i> 10–12 <i class="hours-12-plus"></i> 12+</p>
     </section>`;
 }
 
@@ -199,10 +199,12 @@ function shiftCalendarMonth(monthKey,amount){
 }
 
 function getHoursColorClass(hours){
-    if(hours<5) return "hours-under-five";
-    if(hours<7) return "hours-pink-light";
-    if(hours<9) return "hours-pink-medium";
-    return "hours-pink-deep";
+    if(hours<4) return "hours-0-4";
+    if(hours<6) return "hours-4-6";
+    if(hours<8) return "hours-6-8";
+    if(hours<10) return "hours-8-10";
+    if(hours<12) return "hours-10-12";
+    return "hours-12-plus";
 }
 
 function getHoursPlannerSelectedDate(backdrop,range,isCurrentWeek){

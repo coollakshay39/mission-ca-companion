@@ -24,6 +24,7 @@ function renderWelcomeScreen(){
                 ${renderMissionCard(mission)}
             </section>
 
+            ${renderRewardCard()}
             ${renderHomeUtilities()}
             ${renderMotivationGallery()}
             ${renderQuoteTicker()}
@@ -33,6 +34,15 @@ function renderWelcomeScreen(){
     attachWelcomeEvents();
     startWelcomeQuoteRotation();
     startWelcomeCountdown();
+}
+
+function renderRewardCard(){
+    const reward=state.reward||"";
+    return `
+        <section class="reward-card glass-card" aria-label="Reward">
+            <div><p class="eyebrow">REWARD</p><h2>Your next little celebration</h2><p>${reward?`🎁 ${escapeHtml(reward)}`:"Add something lovely to look forward to."}</p></div>
+            <div class="reward-form"><input id="rewardInput" class="text-input" value="${escapeHtml(reward)}" placeholder="e.g. Order a cheesecake" autocomplete="off"><button id="saveRewardBtn" class="primary-btn" type="button">Save reward</button></div>
+        </section>`;
 }
 
 function renderHomeUtilities(){
@@ -293,13 +303,22 @@ function attachWelcomeEvents(){
 
     const hoursPlannerBtn=document.getElementById("hoursPlannerBtn");
     if(hoursPlannerBtn) hoursPlannerBtn.onclick=openHoursPlanner;
+
+    const saveRewardBtn=document.getElementById("saveRewardBtn");
+    if(saveRewardBtn){
+        const rewardInput=document.getElementById("rewardInput");
+        const save=()=>{ setReward(rewardInput.value); renderWelcomeScreen(); };
+        saveRewardBtn.onclick=save;
+        rewardInput.onkeydown=event=>{ if(event.key==="Enter") save(); };
+    }
 }
 
 function getGreeting(){
     const hour = new Date().getHours();
-    if(hour < 12) return "Good Morning";
+    if(hour >= 6 && hour < 12) return "Good Morning";
     if(hour < 17) return "Good Afternoon";
-    return "Good Evening";
+    if(hour < 21) return "Good Evening";
+    return "Good Night";
 }
 
 function getNickname(){ return "Sej"; }
