@@ -1,4 +1,4 @@
-const CACHE_NAME = "mission-ca-v14";
+const CACHE_NAME = "mission-ca-v15";
 
 const FILES = [
     "./",
