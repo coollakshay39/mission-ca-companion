@@ -267,7 +267,7 @@ function toggleTheme(){
 =========================================================*/
 
 function applyDynamicBackground(){
-    const hour=new Date().getHours();
+    const hour=getIstHour();
     const themes={
         morning:[
             ["#fff8ee","#f1c5e6","#fff0b2","#b266b4"], ["#f8f5ff","#d9c9ff","#d8f3ff","#7451c8"], ["#fff8f5","#ffd6b9","#ffe9a9","#c87949"], ["#f3fbf8","#c6eee5","#daf0ff","#4f9c90"], ["#fffaf2","#f6dfb4","#ffe1d0","#b77b48"]
@@ -282,7 +282,7 @@ function applyDynamicBackground(){
             ["#f2efff","#bfb5ef","#d1c7ff","#6651b3"], ["#f5f0ff","#d5bde9","#c7d3ff","#7855b1"], ["#f0f4ff","#b8c9ef","#c5d9ff","#4e70ae"], ["#f6f0f7","#dcbfe1","#c9c1eb","#8c5f91"], ["#f1f4f9","#becbe0","#c7d4e8","#547491"]
         ]
     };
-    const period=hour>=6&&hour<12?"morning":hour<17?"afternoon":hour<21?"evening":"night";
+    const period=hour>=6&&hour<12?"morning":hour<17?"afternoon":hour<23?"evening":"night";
     const [background,washOne,washTwo,primary]=themes[period][Math.floor(Math.random()*5)];
     const root=document.documentElement.style;
     root.setProperty("--theme-bg",background);
@@ -292,6 +292,14 @@ function applyDynamicBackground(){
     root.setProperty("--primary-dark",primary);
     root.setProperty("--accent",primary);
 
+}
+
+function getIstHour(){
+    return Number(new Intl.DateTimeFormat("en-IN",{
+        timeZone:"Asia/Kolkata",
+        hour:"2-digit",
+        hourCycle:"h23"
+    }).format(new Date()));
 }
 
 function toggleAnimations(){

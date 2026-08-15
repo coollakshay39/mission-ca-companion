@@ -93,7 +93,7 @@ function renderHoursPlanner(backdrop){
             <button class="planner-close" type="button" aria-label="Close">×</button>
             <p class="eyebrow">STUDY JOURNAL</p>
             <h2 id="hoursPlannerTitle">Study hours</h2>
-            <div class="hours-total"><div><strong>${getWeekStudyHours(offset)}</strong><span>hours this week</span></div><div><strong>${getWeekStudyAverage(offset)}</strong><span>average / logged day</span></div></div>
+            <div class="hours-total"><div><strong>${getWeekStudyHours(offset)}</strong><span>hours this week</span></div><div><strong>${formatHoursAndMinutes(getWeekStudyAverage(offset))}</strong><span>average / logged day</span></div></div>
             <div class="week-nav">
                 <button id="previousWeekBtn" class="secondary-btn" type="button">← Previous</button>
                 <span>${formatWeekRange(range)}</span>
@@ -238,4 +238,12 @@ function formatWeekRange(range){
     const end=new Date(`${range.end}T12:00:00`);
     const options={day:"numeric",month:"short"};
     return `${start.toLocaleDateString("en-IN",options)} – ${end.toLocaleDateString("en-IN",options)}`;
+}
+
+function formatHoursAndMinutes(hours){
+    const totalMinutes=Math.round(number(hours)*60);
+    const wholeHours=Math.floor(totalMinutes/60);
+    const minutes=totalMinutes%60;
+    if(!minutes) return `${wholeHours} hour${wholeHours===1?"":"s"}`;
+    return `${wholeHours} hour${wholeHours===1?"":"s"} ${minutes} minute${minutes===1?"":"s"}`;
 }

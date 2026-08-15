@@ -40,7 +40,7 @@ function renderRewardCard(){
     const reward=state.reward||"";
     return `
         <section class="reward-card glass-card" aria-label="Reward">
-            <div><p class="eyebrow">REWARD</p><h2>Your next little celebration</h2><p>${reward?`🎁 ${escapeHtml(reward)}`:"Add something lovely to look forward to."}</p></div>
+            <div class="reward-display"><p class="eyebrow">REWARD</p><h2>${reward?`🎁 ${escapeHtml(reward)}`:"Your next little celebration"}</h2><p>${reward?"Make the work worth it.":"Add something lovely to look forward to."}</p></div>
             <div class="reward-form"><input id="rewardInput" class="text-input" value="${escapeHtml(reward)}" placeholder="e.g. Order a cheesecake" autocomplete="off"><button id="saveRewardBtn" class="primary-btn" type="button">Save reward</button></div>
         </section>`;
 }
@@ -314,10 +314,10 @@ function attachWelcomeEvents(){
 }
 
 function getGreeting(){
-    const hour = new Date().getHours();
+    const hour = getIstHour();
     if(hour >= 6 && hour < 12) return "Good Morning";
     if(hour < 17) return "Good Afternoon";
-    if(hour < 21) return "Good Evening";
+    if(hour < 23) return "Good Evening";
     return "Good Night";
 }
 
