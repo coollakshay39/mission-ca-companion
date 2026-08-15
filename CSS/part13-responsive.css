@@ -71,8 +71,10 @@ body{ min-width:320px; background:radial-gradient(circle at 14% 14%,var(--theme-
 .planner-empty{ padding:19px; color:#80768e; text-align:center; }
 .completed-todos{ margin-top:14px; color:#786e87; font-size:.86rem; }
 .completed-todos summary{ cursor:pointer; }
-.hours-total{ display:flex; align-items:baseline; gap:8px; margin:12px 0 20px; }
+.hours-total{ display:flex; align-items:baseline; gap:25px; margin:12px 0 20px; }
+.hours-total > div{ display:flex; align-items:baseline; gap:8px; }
 .hours-total strong{ color:var(--primary); font-size:2.8rem; letter-spacing:-.07em; }
+.hours-total > div + div strong{ font-size:1.7rem; }
 .hours-total span{ color:#726981; font-size:.95rem; }
 .week-nav{ display:flex; align-items:center; justify-content:space-between; gap:9px; padding:11px 0; border-top:1px solid #eee8f5; border-bottom:1px solid #eee8f5; color:#685d78; font-size:.85rem; font-weight:700; text-align:center; }
 .week-nav .secondary-btn{ min-height:38px; padding:0 13px; border-radius:11px; font-size:.8rem; }
@@ -94,13 +96,15 @@ body{ min-width:320px; background:radial-gradient(circle at 14% 14%,var(--theme-
 .hours-calendar-day b{ font-size:.75rem; }
 .hours-calendar-day:disabled{ color:#c8c1cf; background:rgba(255,255,255,.5); cursor:default; }
 .hours-calendar-day.is-selected{ outline:2px solid var(--primary); outline-offset:1px; }
-.hours-under-five{ color:#a73656; background:#ffdce5; }
-.hours-pink-light{ color:#9d2b5d; background:#f9bdd3; }
-.hours-pink-medium{ color:#fff; background:#e96d9b; }
-.hours-pink-deep{ color:#fff; background:#c92f6a; }
+.hours-0-4{ color:#955568; background:#fce7ee; }
+.hours-4-6{ color:#963554; background:#f7c1d3; }
+.hours-6-8{ color:#862a50; background:#ed91b2; }
+.hours-8-10{ color:#fff; background:#df5d8d; }
+.hours-10-12{ color:#fff; background:#cb3c73; }
+.hours-12-plus{ color:#fff; background:#a91f55; }
 .hours-calendar-key{ display:flex; align-items:center; justify-content:center; gap:7px; margin:13px 0 0; color:#786d85; font-size:.72rem; }
 .hours-calendar-key i{ width:10px; height:10px; border-radius:3px; }
-.hours-calendar-key .under-five{ background:#ffdce5; }.hours-calendar-key .five-plus{ background:#e96d9b; }
+.hours-calendar-key i{ flex:0 0 auto; }.hours-calendar-key .hours-0-4{ background:#fce7ee; }.hours-calendar-key .hours-4-6{ background:#f7c1d3; }.hours-calendar-key .hours-6-8{ background:#ed91b2; }.hours-calendar-key .hours-8-10{ background:#df5d8d; }.hours-calendar-key .hours-10-12{ background:#cb3c73; }.hours-calendar-key .hours-12-plus{ background:#a91f55; }
 
 @media (max-width:1050px){
     .welcome-screen{ width:min(900px,calc(100% - 40px)); }

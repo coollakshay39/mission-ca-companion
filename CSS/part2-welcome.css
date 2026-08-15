@@ -6,7 +6,7 @@
     display:block;
     min-height:0;
     overflow:visible;
-    padding:52px 0 30px;
+    padding:32px 0 30px;
     animation:welcome-enter .55s cubic-bezier(.2,.8,.2,1) both;
 }
 
@@ -18,8 +18,8 @@
 }
 
 .welcome-top > .glass-card{
-    min-height:420px;
-    padding:48px 40px;
+    min-height:350px;
+    padding:36px 40px;
 }
 
 .welcome-hero{ display:flex; flex-direction:column; justify-content:center; }
@@ -91,6 +91,9 @@
 .home-tool-card small{ color:#776f85; font-size:.83rem; }
 .home-tool-card b{ margin-left:auto; color:var(--primary); font-size:1.2rem; }
 .home-tool-icon{ display:grid; width:42px; height:42px; place-items:center; border-radius:14px; color:var(--primary); background:color-mix(in srgb,var(--primary) 12%,white); font-size:1.35rem; font-weight:800; }
+.reward-card{ display:flex; align-items:center; justify-content:space-between; gap:28px; margin-top:18px; padding:20px 24px; border:1px solid rgba(255,255,255,.9); border-radius:22px; background:rgba(255,255,255,.56); box-shadow:0 10px 25px rgba(76,54,129,.07); }
+.reward-card .eyebrow{ margin-bottom:4px; }.reward-card h2{ color:#2b2440; font-size:1.12rem; letter-spacing:-.03em; }.reward-card p:last-child{ margin-top:4px; color:#776f85; font-size:.86rem; }
+.reward-form{ display:flex; flex:1; max-width:560px; gap:10px; }.reward-form .text-input{ min-width:0; flex:1; }.reward-form .primary-btn{ white-space:nowrap; padding:0 18px; }
 .exam-countdown{ display:flex; align-items:center; gap:28px; margin-top:18px; padding:20px 24px; border:1px solid rgba(255,255,255,.9); border-radius:22px; background:rgba(255,255,255,.56); box-shadow:0 10px 25px rgba(76,54,129,.07); }
 .exam-countdown .eyebrow{ margin-bottom:4px; }
 .exam-countdown h2{ color:#2b2440; font-size:1.3rem; letter-spacing:-.035em; }
@@ -109,6 +112,6 @@
 .welcome-ticker span{ color:#7650da; }
 .welcome-ticker.is-changing{ opacity:0; transform:translateY(4px); }
 
-@media (max-width:680px){ .home-utilities{ grid-template-columns:1fr; gap:12px; } .exam-countdown{ align-items:flex-start; flex-direction:column; gap:13px; } .countdown-track{ width:100%; } }
+@media (max-width:680px){ .home-utilities{ grid-template-columns:1fr; gap:12px; } .reward-card,.exam-countdown{ align-items:flex-start; flex-direction:column; gap:13px; } .reward-form,.countdown-track{ width:100%; } .reward-form{ flex-direction:column; }.reward-form .primary-btn{ min-height:46px; } }
 
 @keyframes welcome-enter{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
