@@ -866,10 +866,10 @@ function addTodo(title,estimatedHours="",scheduledDate=null,sourceChapterId=null
     const task=text(title);
     if(!task) return null;
 
-    // A chapter can only have one active scheduled task. Choosing another day
-    // moves that task instead of leaving a duplicate on the earlier day.
+    // A chapter can only have one scheduled task. Choosing another day moves
+    // that task instead of leaving a duplicate on the earlier day.
     if(sourceChapterId){
-        const chapterTodos=state.todos.filter(todo=>todo.sourceChapterId===sourceChapterId&&!todo.completed);
+        const chapterTodos=state.todos.filter(todo=>todo.sourceChapterId===sourceChapterId);
         if(chapterTodos.length){
             const [existing,...duplicates]=chapterTodos;
             existing.title=task;
@@ -934,6 +934,11 @@ function getTodosForDate(dateKey,includeCompleted=false){
         const matchesDate=todo.scheduledDate===dateKey;
         return matchesDate&&(includeCompleted||!todo.completed);
     });
+}
+
+function getChapterScheduledTodo(chapterId){
+    const matches=state.todos.filter(todo=>todo.sourceChapterId===chapterId&&todo.scheduledDate);
+    return matches.sort((first,second)=>(second.createdOn||0)-(first.createdOn||0))[0]||null;
 }
 
 function setReward(value){

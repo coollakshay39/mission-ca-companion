@@ -92,14 +92,15 @@ function renderTodoDay(day,today){
 function openChapterSchedulePlanner(chapter){
     const backdrop=createPlannerBackdrop("schedule-planner");
     const weekDates=getTodoWeekDates();
+    const existingTodo=getChapterScheduledTodo(chapter.id);
     backdrop.innerHTML=`
         <section class="planner-dialog schedule-dialog" role="dialog" aria-modal="true" aria-labelledby="scheduleChapterTitle">
             <button class="planner-close" type="button" aria-label="Close">×</button>
-            <p class="eyebrow">ADD TO YOUR WEEK</p>
+            <p class="eyebrow">${existingTodo?"CHANGE YOUR DAY":"ADD TO YOUR WEEK"}</p>
             <h2 id="scheduleChapterTitle">${escapeHtml(chapter.name)}</h2>
-            <p class="planner-subtitle">Choose the day you want to work on this chapter.</p>
+            <p class="planner-subtitle">${existingTodo?"Choose a new day for this chapter.":"Choose the day you want to work on this chapter."}</p>
             <div class="schedule-options">
-                ${weekDates.map(day=>`<button class="schedule-day-btn" data-date="${day.date}" type="button"><strong>${day.label}</strong><span>${day.dateLabel}</span></button>`).join("")}
+                ${weekDates.map(day=>`<button class="schedule-day-btn ${existingTodo?.scheduledDate===day.date?"is-selected":""}" data-date="${day.date}" type="button"><strong>${day.label}</strong><span>${day.dateLabel}${existingTodo?.scheduledDate===day.date?" · Current":""}</span></button>`).join("")}
             </div>
         </section>`;
     document.body.appendChild(backdrop);
@@ -108,7 +109,8 @@ function openChapterSchedulePlanner(chapter){
         button.onclick=()=>{
             addTodo(chapter.name,"",button.dataset.date,chapter.id);
             backdrop.remove();
-            showToast(`${chapter.name} added to your to-do list.`);
+            showToast(existingTodo?`${chapter.name} moved to ${button.querySelector("strong").textContent}.`:`${chapter.name} added to your to-do list.`);
+            if(isSubject()) renderSubjectScreen();
             if(isWelcome()) renderWelcomeScreen();
         };
     });

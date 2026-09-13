@@ -169,6 +169,9 @@ function renderSubjectScreen(){
 
 function renderChapterCard(chapter){
 
+    const scheduledTodo=getChapterScheduledTodo(chapter.id);
+    const scheduledDay=scheduledTodo?getScheduledDayLabel(scheduledTodo.scheduledDate):null;
+
     return`
 
     <div class="chapter-card" data-chapter-id="${chapter.id}">
@@ -239,13 +242,15 @@ function renderChapterCard(chapter){
 
             <button
 
-                class="secondary-btn schedule-chapter"
+                class="secondary-btn schedule-chapter ${scheduledDay?`schedule-day schedule-day--${scheduledDay.key}`:""}"
 
                 data-id="${chapter.id}"
 
+                aria-label="${scheduledDay?`Scheduled for ${scheduledDay.longName}. Change day`:`Add ${escapeHtml(chapter.name)} to your to-do list`}"
+
             >
 
-                Add
+                ${scheduledDay?scheduledDay.shortName:"Add"}
 
             </button>
 
@@ -266,6 +271,19 @@ function renderChapterCard(chapter){
     </div>
 
     `;
+
+}
+
+function getScheduledDayLabel(dateKey){
+
+    const date=new Date(`${dateKey}T12:00:00`);
+    const key=["sun","mon","tue","wed","thu","fri","sat"][date.getDay()];
+
+    return{
+        key,
+        shortName:date.toLocaleDateString("en-IN",{weekday:"short"}).toUpperCase(),
+        longName:date.toLocaleDateString("en-IN",{weekday:"long"})
+    };
 
 }
 

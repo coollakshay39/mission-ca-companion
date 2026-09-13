@@ -1,4 +1,4 @@
-const CACHE_NAME = "mission-ca-v19";
+const CACHE_NAME = "mission-ca-v20";
 
 const FILES = [
     "./",
@@ -25,7 +25,7 @@ const FILES = [
     "./CSS/part5-missions.css?v=6",
     "./CSS/part6-study-plan.css?v=6",
     "./CSS/part7-subjects.css?v=6",
-    "./CSS/part8-chapters.css?v=6",
+    "./CSS/part8-chapters.css?v=7",
     "./CSS/part9-history.css?v=6",
     "./CSS/part10-charts.css?v=6",
     "./CSS/part11-settings.css?v=6",
