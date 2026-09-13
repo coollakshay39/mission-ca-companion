@@ -866,6 +866,26 @@ function addTodo(title,estimatedHours="",scheduledDate=null,sourceChapterId=null
     const task=text(title);
     if(!task) return null;
 
+    // A chapter can only have one active scheduled task. Choosing another day
+    // moves that task instead of leaving a duplicate on the earlier day.
+    if(sourceChapterId){
+        const chapterTodos=state.todos.filter(todo=>todo.sourceChapterId===sourceChapterId&&!todo.completed);
+        if(chapterTodos.length){
+            const [existing,...duplicates]=chapterTodos;
+            existing.title=task;
+            existing.scheduledDate=scheduledDate||null;
+            if(number(estimatedHours)>0){
+                existing.estimatedHours=Math.round(number(estimatedHours)*100)/100;
+            }
+            if(duplicates.length){
+                const duplicateIds=new Set(duplicates.map(todo=>todo.id));
+                state.todos=state.todos.filter(todo=>!duplicateIds.has(todo.id));
+            }
+            saveState();
+            return existing;
+        }
+    }
+
     const todo={
         id:uuid(),
         title:task,

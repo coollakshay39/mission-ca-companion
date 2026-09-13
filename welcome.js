@@ -202,8 +202,7 @@ function renderMotivationGallery(){
         "assets/motivation/hello-kitty.jpeg",
         "assets/motivation/calculator-cat.jpeg",
         "assets/motivation/cat-study.jpeg",
-        "assets/motivation/degree-girl.jpeg",
-        "assets/motivation/Doitforthelittleyou.jpeg"
+        "assets/motivation/degree-girl.jpeg"
     ]);
 
     return `
