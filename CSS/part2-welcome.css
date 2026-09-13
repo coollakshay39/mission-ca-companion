@@ -52,7 +52,7 @@
 
 .welcome-quote::first-letter{ color:#dacdfb; font-size:2.2rem; font-weight:800; }
 
-.week-progress-card{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background-image:linear-gradient(rgba(252,250,255,.86),rgba(252,250,255,.9)),url("../assets/motivation/Doitforthelittleyou.jpeg"); background-position:center; background-size:cover; }
+.week-progress-card.glass-card{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; background-image:linear-gradient(rgba(252,250,255,.55),rgba(252,250,255,.7)),url("../assets/motivation/Doitforthelittleyou.jpeg")!important; background-position:center; background-size:cover; }
 
 .week-ring-wrapper{ position:relative; width:260px; height:260px; display:grid; place-items:center; }
 .week-ring{ transform:rotate(-90deg); overflow:visible; }
