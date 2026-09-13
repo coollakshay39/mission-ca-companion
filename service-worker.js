@@ -1,4 +1,4 @@
-const CACHE_NAME = "mission-ca-v18";
+const CACHE_NAME = "mission-ca-v19";
 
 const FILES = [
     "./",
@@ -19,7 +19,7 @@ const FILES = [
     "./quotes.js",
     "./ui.js",
     "./CSS/part1-base.css?v=6",
-    "./CSS/part2-welcome.css?v=6",
+    "./CSS/part2-welcome.css?v=7",
     "./CSS/part3-dashboard.css?v=6",
     "./CSS/part4-progress-ring.css?v=6",
     "./CSS/part5-missions.css?v=6",
