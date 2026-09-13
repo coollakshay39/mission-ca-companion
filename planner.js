@@ -9,6 +9,9 @@ function openTodoPlanner(){
 function renderTodoPlanner(backdrop){
     const openTasks=state.todos.filter(todo=>!todo.completed);
     const completedTasks=state.todos.filter(todo=>todo.completed);
+    const weekDates=getTodoWeekDates();
+    const today=getDateKey();
+    const unscheduledTasks=openTasks.filter(todo=>!todo.scheduledDate);
 
     backdrop.innerHTML=`
         <section class="planner-dialog" role="dialog" aria-modal="true" aria-labelledby="todoPlannerTitle">
@@ -19,11 +22,17 @@ function renderTodoPlanner(backdrop){
             <div class="planner-add-row todo-add-row">
                 <input id="todoInput" class="text-input" placeholder="Add something to do…" autocomplete="off">
                 <input id="todoEstimatedHours" class="text-input" type="number" min="0" step="0.25" placeholder="Est. hours" aria-label="Estimated hours">
+                <select id="todoDate" class="planner-select" aria-label="Schedule for">
+                    ${weekDates.map(day=>`<option value="${day.date}" ${day.date===today?"selected":""}>${day.fullLabel}</option>`).join("")}
+                </select>
                 <button id="addTodoBtn" class="primary-btn" type="button">Add</button>
             </div>
-            <div class="todo-list">
-                ${openTasks.length?openTasks.map(renderTodo).join(""):`<p class="planner-empty">Nothing planned yet. Add one small next step.</p>`}
+            <div class="todo-week-scroll" aria-label="Weekly to-do list">
+                <div class="todo-week-board">
+                    ${weekDates.map(day=>renderTodoDay(day,today)).join("")}
+                </div>
             </div>
+            ${unscheduledTasks.length?`<section class="todo-unscheduled"><h3>Unscheduled</h3><div class="todo-list">${unscheduledTasks.map(renderTodo).join("")}</div></section>`:""}
             ${completedTasks.length?`<details class="completed-todos"><summary>${completedTasks.length} completed</summary><div class="todo-list">${completedTasks.map(renderTodo).join("")}</div></details>`:""}
         </section>
     `;
@@ -31,8 +40,9 @@ function renderTodoPlanner(backdrop){
     bindPlannerClose(backdrop);
     const input=backdrop.querySelector("#todoInput");
     const estimatedInput=backdrop.querySelector("#todoEstimatedHours");
+    const dateInput=backdrop.querySelector("#todoDate");
     const add=()=>{
-        const todo=addTodo(input.value,estimatedInput.value);
+        const todo=addTodo(input.value,estimatedInput.value,dateInput.value);
         if(!todo){ input.focus(); return; }
         renderTodoPlanner(backdrop);
     };
@@ -51,6 +61,56 @@ function renderTodoPlanner(backdrop){
         };
     });
     requestAnimationFrame(()=>{ backdrop.classList.add("is-open"); input.focus(); });
+}
+
+function getTodoWeekDates(){
+    const range=getWeekRange();
+    const start=new Date(`${range.start}T12:00:00`);
+    return Array.from({length:7},(_,index)=>{
+        const date=new Date(start);
+        date.setDate(start.getDate()+index);
+        const dateKey=getDateKey(date);
+        return {
+            date:dateKey,
+            label:date.toLocaleDateString("en-IN",{weekday:"short"}),
+            fullLabel:date.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"short"}),
+            dateLabel:date.toLocaleDateString("en-IN",{day:"numeric",month:"short"})
+        };
+    });
+}
+
+function renderTodoDay(day,today){
+    const tasks=getTodosForDate(day.date);
+    return `<section class="todo-day-column ${day.date===today?"is-today":""}">
+        <h3 class="todo-day-heading">${day.label}<small>${day.dateLabel}${day.date===today?" · Today":""}</small></h3>
+        ${tasks.length?tasks.map(renderTodo).join(""):`<p class="todo-day-empty">Nothing planned</p>`}
+    </section>`;
+}
+
+function openChapterSchedulePlanner(chapter){
+    const backdrop=createPlannerBackdrop("schedule-planner");
+    const weekDates=getTodoWeekDates();
+    backdrop.innerHTML=`
+        <section class="planner-dialog schedule-dialog" role="dialog" aria-modal="true" aria-labelledby="scheduleChapterTitle">
+            <button class="planner-close" type="button" aria-label="Close">×</button>
+            <p class="eyebrow">ADD TO YOUR WEEK</p>
+            <h2 id="scheduleChapterTitle">${escapeHtml(chapter.name)}</h2>
+            <p class="planner-subtitle">Choose the day you want to work on this chapter.</p>
+            <div class="schedule-options">
+                ${weekDates.map(day=>`<button class="schedule-day-btn" data-date="${day.date}" type="button"><strong>${day.label}</strong><span>${day.dateLabel}</span></button>`).join("")}
+            </div>
+        </section>`;
+    document.body.appendChild(backdrop);
+    bindPlannerClose(backdrop);
+    backdrop.querySelectorAll(".schedule-day-btn").forEach(button=>{
+        button.onclick=()=>{
+            addTodo(chapter.name,"",button.dataset.date,chapter.id);
+            backdrop.remove();
+            showToast(`${chapter.name} added to your to-do list.`);
+            if(isWelcome()) renderWelcomeScreen();
+        };
+    });
+    requestAnimationFrame(()=>backdrop.classList.add("is-open"));
 }
 
 function renderTodo(todo){
