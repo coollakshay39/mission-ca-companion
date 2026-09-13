@@ -111,6 +111,32 @@ COMPLETE REPLACEMENT
 
 }
 
+.chapter-actions .schedule-day{
+
+    color:#fff;
+
+    border:1px solid transparent;
+
+    box-shadow:0 7px 15px rgba(73,58,128,.16);
+
+}
+
+.chapter-actions .schedule-day--mon{ background:#8666db; }
+.chapter-actions .schedule-day--tue{ background:#5e9bd7; }
+.chapter-actions .schedule-day--wed{ background:#53ae91; }
+.chapter-actions .schedule-day--thu{ background:#d68d65; }
+.chapter-actions .schedule-day--fri{ background:#d36c9d; }
+.chapter-actions .schedule-day--sat{ background:#9b71c7; }
+.chapter-actions .schedule-day--sun{ background:#d4a148; }
+
+.chapter-actions .schedule-day:hover{
+
+    color:#fff;
+
+    filter:brightness(.96);
+
+}
+
 .chapter-checkbox{
 
     display:flex;
