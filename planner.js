@@ -64,8 +64,10 @@ function renderTodoPlanner(backdrop){
 }
 
 function getTodoWeekDates(){
-    const range=getWeekRange();
-    const start=new Date(`${range.start}T12:00:00`);
+    const today=new Date();
+    const start=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const mondayOffset=(start.getDay()+6)%7;
+    start.setDate(start.getDate()-mondayOffset);
     return Array.from({length:7},(_,index)=>{
         const date=new Date(start);
         date.setDate(start.getDate()+index);

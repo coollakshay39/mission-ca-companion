@@ -1,4 +1,4 @@
-const CACHE_NAME = "mission-ca-v16";
+const CACHE_NAME = "mission-ca-v17";
 
 const FILES = [
     "./",
@@ -36,7 +36,7 @@ const FILES = [
     "./assets/motivation/shant-girl.jpeg",
     "./assets/motivation/degree-girl.jpeg",
     "./assets/motivation/calculator-cat.jpeg",
-    "./assets/motivation/little-you.jpeg",
+  "./assets/motivation/Doitforthelittleyou.jpeg",
     "./assets/icons/icon-192.png",
     "./assets/icons/icon-512.png"
 ];

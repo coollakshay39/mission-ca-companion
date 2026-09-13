@@ -203,7 +203,7 @@ function renderMotivationGallery(){
         "assets/motivation/calculator-cat.jpeg",
         "assets/motivation/cat-study.jpeg",
         "assets/motivation/degree-girl.jpeg",
-        "assets/motivation/little-you.jpeg"
+        "assets/motivation/Doitforthelittleyou.jpeg"
     ]);
 
     return `
@@ -212,7 +212,7 @@ function renderMotivationGallery(){
             <div class="motivation-strip">
                 ${images.map((image, index) => `
                     <figure class="motivation-image-card">
-                        <img src="${image}" draggable="false" loading="${index > 1 ? "lazy" : "eager"}" alt="Study motivation ${index + 1}">
+                        <img src="${image}" draggable="false" loading="eager" alt="Study motivation ${index + 1}">
                     </figure>
                 `).join("")}
             </div>

@@ -171,7 +171,7 @@ function renderChapterCard(chapter){
 
     return`
 
-    <div class="chapter-card" data-chapter-id="${chapter.id}" tabindex="0" aria-label="${escapeHtml(chapter.name)}. Press and hold to add to your weekly to-do list.">
+    <div class="chapter-card" data-chapter-id="${chapter.id}">
 
         <div class="chapter-info">
 
@@ -188,8 +188,6 @@ function renderChapterCard(chapter){
                     Weight : ${chapter.weight}%
 
                 </p>
-
-                <small class="chapter-schedule-hint">Press &amp; hold to schedule</small>
 
             </div>
 
@@ -241,6 +239,18 @@ function renderChapterCard(chapter){
 
             <button
 
+                class="secondary-btn schedule-chapter"
+
+                data-id="${chapter.id}"
+
+            >
+
+                Add
+
+            </button>
+
+            <button
+
                 class="danger-btn delete-chapter"
 
                 data-id="${chapter.id}"
@@ -260,8 +270,6 @@ function renderChapterCard(chapter){
 }
 
 function attachSubjectEvents(){
-
-    attachChapterScheduleEvents();
 
     document.getElementById(
 
@@ -437,6 +445,32 @@ function attachSubjectEvents(){
 
     document
         .querySelectorAll(
+            ".schedule-chapter"
+        )
+        .forEach(button=>{
+
+            button.onclick=()=>{
+
+                const chapter=getChapter(
+
+                    button.dataset.id
+
+                );
+
+                if(!chapter){
+
+                    return;
+
+                }
+
+                openChapterSchedulePlanner(chapter);
+
+            };
+
+        });
+
+    document
+        .querySelectorAll(
             ".delete-chapter"
         )
         .forEach(button=>{
@@ -469,43 +503,6 @@ function attachSubjectEvents(){
 
         });
 
-}
-
-function attachChapterScheduleEvents(){
-    document.querySelectorAll(".chapter-card").forEach(card=>{
-        let holdTimer=null;
-        let didOpen=false;
-        const clearHold=()=>{
-            clearTimeout(holdTimer);
-            holdTimer=null;
-        };
-        const beginHold=event=>{
-            if(event.target.closest("button,input,label")) return;
-            didOpen=false;
-            clearHold();
-            holdTimer=setTimeout(()=>{
-                const chapter=getChapter(card.dataset.chapterId);
-                if(!chapter) return;
-                didOpen=true;
-                navigator.vibrate?.(20);
-                openChapterSchedulePlanner(chapter);
-            },650);
-        };
-        card.onpointerdown=beginHold;
-        card.onpointerup=clearHold;
-        card.onpointerleave=clearHold;
-        card.onpointercancel=clearHold;
-        card.oncontextmenu=event=>{
-            if(didOpen) event.preventDefault();
-        };
-        card.onkeydown=event=>{
-            if(event.key==="Enter"||event.key===" "){
-                event.preventDefault();
-                const chapter=getChapter(card.dataset.chapterId);
-                if(chapter) openChapterSchedulePlanner(chapter);
-            }
-        };
-    });
 }
 
 /* ==========================================
